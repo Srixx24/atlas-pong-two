@@ -15,7 +15,9 @@ namespace ZPong
         public float screenBottom { get; private set; }
         
         private RectTransform rectTransform;
-
+        public float currentVelocity = 0f;
+        public float maxSpeed = 10000f;
+        public float decelerationRate = 20f;
 
         private void Start()
         {
@@ -38,15 +40,21 @@ namespace ZPong
 
         public void Move(float movement)
         {
-            //Set temporary variable
+            // Set temporary variable
             Vector2 newPosition = rectTransform.anchoredPosition;
 
-            //Manipulate the temporary variable
-            newPosition.y += movement;
+            // Manipulate the temporary variable
+            currentVelocity += movement * maxSpeed;
+            currentVelocity = Mathf.Clamp(currentVelocity, -maxSpeed, maxSpeed);
+
+            // Decelerate the paddle
+            currentVelocity = Mathf.Lerp(currentVelocity, 0f, decelerationRate * Time.deltaTime);
+
+            newPosition.y += currentVelocity * Time.deltaTime;
             newPosition.y = Mathf.Clamp(newPosition.y, screenBottom + halfPlayerHeight, screenTop - halfPlayerHeight);
 
-            //Apply temporary variable back to original component
-            rectTransform.anchoredPosition = newPosition;
+            // Apply temporary variable back to original component
+            rectTransform.anchoredPosition = Vector2.Lerp(rectTransform.anchoredPosition, newPosition, 0.2f);
         }
 
         public float GetHalfHeight()
