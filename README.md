@@ -1,1 +1,1 @@
-# atlas-pong-two
+# Pong one

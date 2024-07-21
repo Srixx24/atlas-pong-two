@@ -1,141 +1,99 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-namespace ZPong
+public class GameManager : MonoBehaviour
 {
+    public const int WinningScore = 11;
+    public GameObject EndGameAnnouncement;
+    public TextMeshProUGUI playerOneScoreText;
+    public TextMeshProUGUI playerTwoScoreText;
+    public TextMeshProUGUI FinalScore;
+    public ScoreKeeper scoreKeeper;
+    private AudioSource audioSource;
+    public AudioClip endgameSound;
 
-    public class GameManager : MonoBehaviour
+
+    private void Start()
     {
-        [SerializeField] private float startDelay = 3f;
-        [SerializeField] private GameObject ballPrefab;
-        [SerializeField] private GameObject canvasParent;
-        [SerializeField] private Vector3 entryPoint = new Vector3(0f, 920f, 0f);
+        scoreKeeper = GetComponent<ScoreKeeper>();
 
-        public Ball activeBall;
+        scoreKeeper.playerOneScore = playerOneScoreText;
+        scoreKeeper.playerTwoScore = playerTwoScoreText;
 
-        public static GameManager Instance { get; private set; }
+        //scoreKeeper.onScoreChanged.AddListener(OnScoreChanged);
 
-        private Goal[] goals;
-        public Image explosionImage;
-        private float explosionDuration = 20f;
+        audioSource = GetComponent<AudioSource>();
+    }
 
-        private void Awake()
+    public void Update()
+    {
+        // Check if the ball has entered the goal area
+        CheckGoal();
+    }
+
+    private void CheckGoal()
+    {
+        // Use the OnTriggerEnter2D event in the ScoreKeeper class to detect goals
+        Collider2D goalCollider = Physics2D.OverlapCircle(scoreKeeper.ball.transform.position, 0.5f, LayerMask.GetMask("Goal"));
+        if (goalCollider != null)
         {
-            if (Instance != null && Instance != this)
+            // If a goal is detected, update the scores accordingly
+            if (goalCollider.transform.position.x < 0)
             {
-                Destroy(this);
+                // Goal scored by player two
+                scoreKeeper.playerTwoScore.text = (int.Parse(scoreKeeper.playerTwoScore.text) + 1).ToString();
             }
             else
             {
-                Instance = this;
+                // Goal scored by player one
+                scoreKeeper.playerOneScore.text = (int.Parse(scoreKeeper.playerOneScore.text) + 1).ToString();
             }
 
-            goals = new Goal[2];
+            // Check the winning condition after a goal is scored
+            CheckWinningCondition(int.Parse(scoreKeeper.playerOneScore.text), int.Parse(scoreKeeper.playerTwoScore.text));
         }
+    }
 
-        void SetGame()
+    // Checks for 11 points by either players
+    private void CheckWinningCondition(int playerOneScore, int playerTwoScore)
+    {
+        if (playerOneScore >= WinningScore)
         {
-            // Clones the ball from the prefab at the start of the game
-            if (activeBall == null)
-            {
-                activeBall = Instantiate(ballPrefab, entryPoint, this.transform.rotation, canvasParent.transform)
-                    .GetComponent<Ball>();
-                activeBall.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, 920f);
-            }
-
-            StartCoroutine(FallIntoBall());
+            EndGame("Player One", "Player Two");
         }
-
-        IEnumerator FallIntoBall()
+        else if (playerTwoScore >= WinningScore)
         {
-            activeBall.SetBallActive(false);
-            float fallDuration = 1f;
-            float startTime = Time.time;
-
-            while (Time.time - startTime < fallDuration)
-            {
-                float t = (Time.time - startTime) / fallDuration;
-                activeBall.transform.position = Vector3.Lerp(entryPoint, Vector3.zero, t);
-                activeBall.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, Mathf.Lerp(920f, 0f, t));
-                yield return null;
-            }
-
-            activeBall.transform.position = Vector3.zero;
-            activeBall.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            activeBall.SetBallActive(true);
-
-            // Display the explosion effect
-            if (explosionImage != null)
-            {
-                explosionImage.gameObject.SetActive(true);
-                yield return new WaitForSeconds(explosionDuration);
-                explosionImage.gameObject.SetActive(false);
-            }
+            EndGame("Player Two", "Player One");
         }
+    }
 
-        void StartGame()
-        {
-            //Debug.Log("Starting game!");
-            activeBall.SetBallActive(true);
-        }
+    /*
+     * EndGame handles the end-game logic, including freezing the game time, playing the end-game sound,
+     * activating the end-game canvas, and displaying the final scores in the canvas
+     */
+    private void EndGame(string winner, string loser)
+    {
+        // Freeze the game
+        Time.timeScale = 0f;
 
-        public void Reset()
-        {
-            StartCoroutine(StartTimer());
-        }
+        // Play the endgame sound
+        PlayEndgameSound();
 
-        private void Start()
-        {
-            Reset();
-        }
+        // Show the end game canvas
+        EndGameAnnouncement.SetActive(true);
 
-        IEnumerator StartTimer()
-        {
-            SetGame();
-            yield return new WaitForSeconds(startDelay);
+        // Display the final scores
+        playerOneScoreText.text = playerOneScoreText.text;
+        playerTwoScoreText.text = playerTwoScoreText.text;
+        FinalScore.text = $"{winner} is the Victor!\n{loser} has been defeated!";
+    }
 
-            SetBounds();
-
-            StartGame();
-        }
-
-        void SetBounds()
-        {
-            activeBall.SetHeightBounds();
-            foreach (var g in goals)
-            {
-                g.SetHeightBounds();
-            }
-        }
-
-        public void ResetBall()
-        {
-            StartCoroutine(ResetBallCoroutine());
-        }
-
-        private IEnumerator ResetBallCoroutine()
-        {
-            // Simply reset the ball's position and state instead of destroying it
-            activeBall.transform.position = Vector3.zero;
-            activeBall.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            activeBall.SetBallActive(false);
-
-            yield return null;
-
-            StartCoroutine(StartTimer());
-        }
-
-        public void SetGoalObj(Goal g)
-        {
-            if (goals[0])
-            {
-                goals[1] = g;
-            }
-            else
-            {
-                goals[0] = g;
-            }
-        }
+    private void PlayEndgameSound()
+    {
+        audioSource.clip = endgameSound;
+        audioSource.Play();
     }
 }
