@@ -14,6 +14,8 @@ public class ScoreKeeper : MonoBehaviour
     private int playerTwoPoints = 0;
     public int score = 0;
     public UnityEvent<int, int> onScoreChanged;
+    public GameObject flashEffect;
+    private float flashDuration = .15f;
 
 
     private void Start()
@@ -38,15 +40,32 @@ public class ScoreKeeper : MonoBehaviour
         if (collision.CompareTag("Player2"))
         {
             Debug.Log("leftGoal");
+            FlashScore();
             IncreasePlayerTwoScore();
             ball.ResetBall();
         }
         else if (collision.CompareTag("Player1"))
         {
-        Debug.Log("rightGoal");
-        IncreasePlayerOneScore();
-        ball.ResetBall();
+            Debug.Log("rightGoal");
+            FlashScore();
+            IncreasePlayerOneScore();
+            ball.ResetBall();
         }
+    }
+
+    private void FlashScore()
+    {
+        if (flashEffect != null)
+        {
+            flashEffect.SetActive(true);
+            StartCoroutine(FadeFlashEffect());
+        }
+    }
+
+    private IEnumerator FadeFlashEffect()
+    {
+        yield return new WaitForSeconds(flashDuration);
+        flashEffect.SetActive(false);
     }
 
     public void IncreasePlayerOneScore()

@@ -21,7 +21,8 @@ public class Ball : MonoBehaviour
     public Image explosionImage;
     private float explosionDuration = .25f;
     public GameObject ImpactReaction; // Reference to the particle system prefab
-    private float impactPSDuration = 2f;
+    private float impactPSDuration = 1f;
+    private ScreenShakeManager screenShakeManager;
 
     void Start()
     {
@@ -35,6 +36,7 @@ public class Ball : MonoBehaviour
         velocity = new Vector3(speed, 0f, 0f);
 
         audioSource = GetComponent<AudioSource>();
+        screenShakeManager = GetComponent<ScreenShakeManager>();
 
     }
 
@@ -72,7 +74,7 @@ public class Ball : MonoBehaviour
         * direction. This ensures that the ball starts moving in a different direction 
         * each time the game is played.
         */
-        float angle = Random.value < 0.5f ? -1f : 1f;
+        float angle = Random.value < 1f ? -1f : 1f;
         float force = Random.value < 0.5f ? Random.Range(-10f, -0.8f) : Random.Range(0.8f, 10f);
 
         Vector2 direction = new Vector2(angle, force);
@@ -95,6 +97,16 @@ public class Ball : MonoBehaviour
         {
             // Play the impact sound effect
             PlayImpactSound(collision);
+
+            // Get the ball's speed at the moment of impact
+            float impactSpeed = rb.velocity.magnitude;
+
+            // Calculate the shake intensity based on the impact speed
+            float shakeIntensity = Mathf.Clamp(impactSpeed / 100000f, 1f, 5f);
+            float shakeDuration = Mathf.Clamp(impactSpeed / 200000f, 1f, 5f);
+
+            // Call the ScreenShake function
+            screenShakeManager.ShakeCamera(shakeIntensity, shakeDuration);
         }
 
         // Instantiate a new copy of the particle system at the ball's position
@@ -104,7 +116,7 @@ public class Ball : MonoBehaviour
         var particleSystem = particleSystemInstance.GetComponent<ParticleSystem>();
         particleSystem.Play();
 
-        // Destroy the particle system instance after the specified duration
+        // Destroy the particle system instance
         Destroy(particleSystemInstance, impactPSDuration);
     }
 

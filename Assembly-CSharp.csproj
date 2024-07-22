@@ -73,6 +73,7 @@
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\Landingpage.cs" />
     <Compile Include="Assets\Scripts\ScoreKeeper.cs" />
+    <Compile Include="Assets\Scripts\ScreenShakeManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -1249,6 +1250,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="LeanTransition.csproj" />
+    <ProjectReference Include="LeanCommon.csproj" />
+    <ProjectReference Include="LeanTransition.Editor.csproj" />
+    <ProjectReference Include="CW.Common.csproj" />
   </ItemGroup>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
   <ItemGroup>
