@@ -12,6 +12,8 @@ TagManager:
   - Player1
   - Player2
   - ImpactReaction
+  - Block
+  - Slick
   layers:
   - Default
   - TransparentFX

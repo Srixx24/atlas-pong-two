@@ -88,6 +88,12 @@ public class Ball : MonoBehaviour
         rb.AddForce(direction * this.speed);
     }
 
+    public void ReduceSpeed(float amount)
+    {
+        // Reduce the ball's speed
+        speed = Mathf.Max(0f, speed - amount);
+    }
+
     void Update()
     {
         // Maintain a constant ball speed
