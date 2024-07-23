@@ -23,6 +23,11 @@ public class Ball : MonoBehaviour
     public GameObject ImpactReaction; // Reference to the particle system prefab
     private float impactPSDuration = 1f;
     private ScreenShakeManager screenShakeManager;
+    public float color1Speed = 1500f;
+    public float color2Speed = 1800f;
+    public Sprite[] colorSprites;
+    private int currentColorIndex = 0;
+    private SpriteRenderer spriteRenderer;
 
     void Start()
     {
@@ -38,6 +43,8 @@ public class Ball : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         screenShakeManager = GetComponent<ScreenShakeManager>();
 
+        // Load the color sprites into an array
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     IEnumerator FallIntoBall()
@@ -88,6 +95,8 @@ public class Ball : MonoBehaviour
 
         // Increase the ball's speed over time
         IncreaseSpeed();
+
+        ChangeColor();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -127,12 +136,28 @@ public class Ball : MonoBehaviour
 
         speed = velocity.magnitude;
 
-    // Limit the ball's speed to the maximum speed
-    if (speed > maxSpeed)
-    {
-        velocity = velocity.normalized * maxSpeed;
-        speed = maxSpeed;
+        // Limit the ball's speed to the maximum speed
+        if (speed > maxSpeed)
+        {
+            velocity = velocity.normalized * maxSpeed;
+            speed = maxSpeed;
+        }
     }
+
+    private void ChangeColor()
+    {
+        // Change the ball's color to the first color when the speed reaches 1500
+        if (speed >= color1Speed && currentColorIndex < colorSprites.Length - 1)
+        {
+            currentColorIndex = 1;
+            spriteRenderer.sprite = colorSprites[currentColorIndex];
+        }
+        // Change the ball's color to the second color when the speed reaches 1800
+        else if (speed >= color2Speed && currentColorIndex < colorSprites.Length - 1)
+        {
+            currentColorIndex = 2;
+            spriteRenderer.sprite = colorSprites[currentColorIndex];
+        }
     }
 
     private void PlayImpactSound(Collision2D collision)

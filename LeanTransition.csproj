@@ -121,8 +121,8 @@
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\CanvasGroup\LeanCanvasGroupInteractable.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\LeanGet.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Extras\Scripts\LeanManualAnimation.cs" />
-    <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\LeanPlaySound.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\RectTransform\LeanRectTransformAnchoredPosition.cs" />
+    <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\LeanPlaySound.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\LeanDelay.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\Transform\LeanTransformPosition.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\Transform\LeanTransformLocalScale.cs" />
@@ -131,8 +131,8 @@
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\RectTransform\LeanRectTransformPivot_y.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\RectTransform\LeanRectTransformSizeDelta_x.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\Transform\LeanTransformLocalEulerAngles.cs" />
-    <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Scripts\LeanMethod.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\Light\LeanLightIntensity.cs" />
+    <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Scripts\LeanMethod.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\RectTransform\LeanRectTransformAnchorMin.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\CanvasGroup\LeanCanvasGroupBlocksRaycasts.cs" />
     <Compile Include="Assets\Plugins\CW\LeanTransition\Required\Methods\SpriteRenderer\LeanSpriteRendererColor.cs" />
