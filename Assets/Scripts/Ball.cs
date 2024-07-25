@@ -28,6 +28,8 @@ public class Ball : MonoBehaviour
     public Sprite[] colorSprites;
     private int currentColorIndex = 0;
     private SpriteRenderer spriteRenderer;
+    private float minSpeed = 1200f;
+    private float decelerationRate = -500f;
 
     void Start()
     {
@@ -88,12 +90,6 @@ public class Ball : MonoBehaviour
         rb.AddForce(direction * this.speed);
     }
 
-    public void ReduceSpeed(float amount)
-    {
-        // Reduce the ball's speed
-        speed = Mathf.Max(0f, speed - amount);
-    }
-
     void Update()
     {
         // Maintain a constant ball speed
@@ -148,6 +144,27 @@ public class Ball : MonoBehaviour
             velocity = velocity.normalized * maxSpeed;
             speed = maxSpeed;
         }
+    }
+
+    public void DecreaseSpeed()
+    {
+        // Decrease the ball's velocity
+        velocity *= (1 - decelerationRate * Time.deltaTime);
+
+        speed = velocity.magnitude;
+
+        // Limit the ball's speed to the minimum speed
+        if (speed < minSpeed)
+        {
+            velocity = velocity.normalized * minSpeed;
+            speed = minSpeed;
+        }
+    }
+
+    public void StopDecreasing()
+    {
+        // Reset the deceleration rate to 0 to stop decreasing the speed
+        decelerationRate = 0f;
     }
 
     private void ChangeColor()

@@ -14,6 +14,8 @@ TagManager:
   - ImpactReaction
   - Block
   - Slick
+  - Wall
+  - WallTrigger
   layers:
   - Default
   - TransparentFX
