@@ -8,9 +8,9 @@ public class Ball : MonoBehaviour
     private Vector3 initialPosition;
     private Vector3 entryPoint = new Vector3(0f, 630f, 0f);
     private Rigidbody2D rb;
-    public float speed = 500f;
+    public float speed = 50f;
     public float accelerationRate = 0.1f;
-    public float maxSpeed = 5000f;
+    public float maxSpeed = 250f;
     public Vector3 velocity;
     private bool isBallActive = false;
     private AudioSource audioSource;
@@ -23,13 +23,13 @@ public class Ball : MonoBehaviour
     public GameObject ImpactReaction; // Reference to the particle system prefab
     private float impactPSDuration = 1f;
     private ScreenShakeManager screenShakeManager;
-    public float color1Speed = 1500f;
-    public float color2Speed = 1800f;
+    public float color1Speed = 100f;
+    public float color2Speed = 120f;
     public Sprite[] colorSprites;
     private int currentColorIndex = 0;
     private SpriteRenderer spriteRenderer;
-    private float minSpeed = 1200f;
-    private float decelerationRate = -500f;
+    private float minSpeed = 30f;
+    private float decelerationRate = -50f;
 
     void Start()
     {
@@ -213,7 +213,7 @@ public class Ball : MonoBehaviour
         * using the AddForce() method.
         */
         ResetVelocityAndSpeed();
-        transform.position = new Vector3(1278f, 715f, 42f);
+        transform.position = new Vector3(1278f, 715f, 0f);
         AddForce();
     }
 

@@ -16,6 +16,7 @@ TagManager:
   - Slick
   - Wall
   - WallTrigger
+  - Second Camera
   layers:
   - Default
   - TransparentFX
