@@ -34,7 +34,6 @@ public class Ball : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        //initialPosition = transform.position;
 
         initialPosition = transform.position;
         StartCoroutine(FallIntoBall());
@@ -213,7 +212,7 @@ public class Ball : MonoBehaviour
         * using the AddForce() method.
         */
         ResetVelocityAndSpeed();
-        transform.position = new Vector3(1278f, 715f, 0f);
+        transform.position = new Vector3(0f, 630f, 0f);
         AddForce();
     }
 
